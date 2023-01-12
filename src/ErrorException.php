@@ -6,16 +6,22 @@ namespace ErrorReporting;
 
 class ErrorException extends \ErrorException
 {
-    public const ERROR_LEVEL_TO_LABEL = [
-        E_WARNING => 'Warning',
-        E_NOTICE => 'Notice',
-        E_USER_ERROR => 'User Error',
-        E_USER_WARNING => 'User Warning',
-        E_USER_NOTICE => 'User Notice',
-        E_STRICT => 'Runtime Notice',
-        E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
-        E_DEPRECATED => 'PHP Deprecation Notice',
-        E_USER_DEPRECATED => 'Deprecation Notice',
+    public const ERROR_SEVERITY_DESCRIPTION = [
+        \E_DEPRECATED => 'Deprecated',
+        \E_USER_DEPRECATED => 'User Deprecated',
+        \E_NOTICE => 'Notice',
+        \E_USER_NOTICE => 'User Notice',
+        \E_STRICT => 'Runtime Notice',
+        \E_WARNING => 'Warning',
+        \E_USER_WARNING => 'User Warning',
+        \E_COMPILE_WARNING => 'Compile Warning',
+        \E_CORE_WARNING => 'Core Warning',
+        \E_USER_ERROR => 'User Error',
+        \E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
+        \E_COMPILE_ERROR => 'Compile Error',
+        \E_PARSE => 'Parse Error',
+        \E_ERROR => 'Error',
+        \E_CORE_ERROR => 'Core Error',
     ];
 
     public static function fromError(int $severity, string $errorMessage, string $errorFile, int $errorLine): \ErrorException
@@ -25,9 +31,19 @@ class ErrorException extends \ErrorException
 
     public static function fromErrorException(\ErrorException $errorException): \ErrorException
     {
+        if ($errorException instanceof self) {
+            return $errorException;
+        }
+        $message = $errorException->getMessage();
+        $severityLabel = self::ERROR_SEVERITY_DESCRIPTION[$errorException->getSeverity()];
+        // @todo use str_begins_with once minimum PHP version is > 7
+        if (strpos($message, $severityLabel) === 0) {
+            // Remove already applied label including colon and space
+            $message = substr($message, strlen($severityLabel) + 2);
+        }
         return self::createExceptionFromError(
             $errorException->getSeverity(),
-            $errorException->getMessage(),
+            $message,
             $errorException->getFile(),
             $errorException->getLine()
         );
@@ -37,7 +53,7 @@ class ErrorException extends \ErrorException
     {
         $exceptionClass = self::determineExceptionClass($severity);
         return self::cleanBacktraceFromErrorHandlerFrames(new $exceptionClass(
-            self::ERROR_LEVEL_TO_LABEL[$severity] . ': ' . $errorMessage,
+            self::ERROR_SEVERITY_DESCRIPTION[$severity] . ': ' . $errorMessage,
             1,
             $severity,
             $errorFile,
