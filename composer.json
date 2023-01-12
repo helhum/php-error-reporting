@@ -1,0 +1,35 @@
+{
+    "name": "helhum/php-error-reporting",
+    "license": "GPL-2.0-or-later",
+    "description": "Create ErrorException with clean trace from PHP error handler errors, inspired by Sentry PHP SDK",
+    "keywords": [
+        "sentry",
+        "error reporting"
+    ],
+    "support": {
+        "issues": "https://github.com/helhum/php-error-reporting"
+    },
+    "homepage": "https://helhum.io",
+    "authors": [
+        {
+            "name": "Helmut Hummel",
+            "email": "typo3@helhum.io"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ErrorReporting\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.2",
+        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan-doctrine": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.0",
+        "phpstan/phpstan-deprecation-rules": "^1.0"
+    }
+}

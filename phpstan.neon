@@ -1,0 +1,17 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-doctrine/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - phpstan-baseline.neon
+parameters:
+    tmpDir: temp/phpstan
+    level: 8
+    strictRules:
+        allRules: true
+    reportMaybesInPropertyPhpDocTypes: false
+    paths:
+         - src/
+    ignoreErrors: [ ]
+    excludePaths: []
